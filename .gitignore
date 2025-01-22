@@ -1,5 +1,4 @@
 # Binaries
-sdrparser
 *.exe
 *.dll
 *.so
