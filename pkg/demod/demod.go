@@ -1,5 +1,7 @@
 package demod
 
+import "math"
+
 type DemodulationType int
 
 const (
@@ -212,4 +214,70 @@ func NewDemodulator(config DemodulatorConfig) Demodulator {
 	default:
 		return &AMDemod{}
 	}
+}
+
+// AmModulate performs AM modulation
+func AmModulate(carrier, message []float64) []float64 {
+	result := make([]float64, len(carrier))
+	for i := 0; i < len(carrier); i++ {
+		result[i] = carrier[i] * (1 + message[i])
+	}
+	return result
+}
+
+// FmModulate performs FM modulation
+func FmModulate(carrier, message []float64) []float64 {
+	result := make([]float64, len(carrier))
+	phase := 0.0
+	for i := 0; i < len(carrier); i++ {
+		phase += message[i]
+		result[i] = carrier[i] * math.Sin(phase)
+	}
+	return result
+}
+
+// UsbModulate performs USB modulation
+func UsbModulate(carrier, message []float64) []float64 {
+	result := make([]float64, len(carrier))
+	for i := 0; i < len(carrier); i++ {
+		result[i] = carrier[i] * message[i] * math.Cos(float64(i))
+	}
+	return result
+}
+
+// LsbModulate performs LSB modulation
+func LsbModulate(carrier, message []float64) []float64 {
+	result := make([]float64, len(carrier))
+	for i := 0; i < len(carrier); i++ {
+		result[i] = carrier[i] * message[i] * math.Sin(float64(i))
+	}
+	return result
+}
+
+// AmDemodulate performs AM demodulation
+func AmDemodulate(samples []float64) []float64 {
+	demod := NewDemodulator(DemodulatorConfig{Type: AM})
+	result, _ := demod.Demodulate(samples)
+	return result
+}
+
+// FmDemodulate performs FM demodulation
+func FmDemodulate(samples []float64) []float64 {
+	demod := NewDemodulator(DemodulatorConfig{Type: FM})
+	result, _ := demod.Demodulate(samples)
+	return result
+}
+
+// UsbDemodulate performs USB demodulation
+func UsbDemodulate(samples []float64) []float64 {
+	demod := NewDemodulator(DemodulatorConfig{Type: USB})
+	result, _ := demod.Demodulate(samples)
+	return result
+}
+
+// LsbDemodulate performs LSB demodulation
+func LsbDemodulate(samples []float64) []float64 {
+	demod := NewDemodulator(DemodulatorConfig{Type: LSB})
+	result, _ := demod.Demodulate(samples)
+	return result
 }
