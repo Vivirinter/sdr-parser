@@ -23,7 +23,7 @@ func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file")
 
-	// Добавляем команды
+	// Add commands
 	rootCmd.AddCommand(getGenerateCmd())
 	rootCmd.AddCommand(getDemodCmd())
 	rootCmd.AddCommand(getFilterCmd())
@@ -35,6 +35,6 @@ func initConfig() {
 	}
 
 	if err := viper.ReadInConfig(); err == nil {
-		// Используем конфигурацию
+		// Using configuration file
 	}
 }
